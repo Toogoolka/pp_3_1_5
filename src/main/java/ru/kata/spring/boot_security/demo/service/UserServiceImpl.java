@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.util.UserNotFoundException;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,10 +32,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findOne(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
-        if (foundUser == null) {
-            throw new UsernameNotFoundException(String.format("User with id: '%f' - not found", id));
-        }
-        return foundUser.get();
+//        if (foundUser == null) {
+//            throw new UsernameNotFoundException(String.format("User with id: '%f' - not found", id));
+//        }
+        return foundUser.orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional

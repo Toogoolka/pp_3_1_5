@@ -58,7 +58,6 @@ public class AdminController {
 
     @PatchMapping("/users/{id}")
     public String update(@ModelAttribute("user") User user) {
-        System.out.println(user);
         userService.update(user);
         return "redirect:/admin/data";
     }
