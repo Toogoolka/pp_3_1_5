@@ -12,5 +12,7 @@ public interface UserService {
     public void save(User user);
     public void update(User updatedUser);
     public void delete(Long id);
+    public void setInfoToUser(User user);
+    public void setUpdatedInfoToUser(User user);
 
 }

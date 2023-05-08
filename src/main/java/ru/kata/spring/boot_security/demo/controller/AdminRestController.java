@@ -1,11 +1,13 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -16,6 +18,7 @@ import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -23,27 +26,31 @@ public class AdminRestController {
     private final UserService userService;
     private final UserValidator userValidator;
     private final RoleService roleService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public AdminRestController(UserService userService, UserValidator userValidator, RoleService roleService) {
+    public AdminRestController(UserService userService, UserValidator userValidator, RoleService roleService, ModelMapper modelMapper) {
         this.userService = userService;
         this.userValidator = userValidator;
         this.roleService = roleService;
+        this.modelMapper = modelMapper;
     }
 
 
     @GetMapping()
-    public List<User> getUsers() {
-        return userService.findAll();
+    public List<UserDTO> getUsers() {
+        return userService.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public User findOne(@PathVariable("id") Long id) {
-        return userService.findOne(id);
+    public UserDTO getOneDTO(@PathVariable("id") Long id) {
+        return convertToDTO(userService.findOne(id));
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid User user,
+    public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid UserDTO userDTO,
                                                  BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             StringBuilder errorMsg = new StringBuilder();
@@ -57,9 +64,37 @@ public class AdminRestController {
 
             throw new UserNotCreatedException(errorMsg.toString());
          }
-        userService.save(user);
+        userService.save(convertToUser(userDTO));
 
         // send HTTP answer with null body and status 200
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid UserDTO userDTO,
+//                                                 BindingResult bindingResult,
+//                                                 @PathVariable("id") Long id){
+//        if (bindingResult.hasErrors()) {
+//            StringBuilder errorMsg = new StringBuilder();
+//            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+//
+//            for (FieldError error : fieldErrors) {
+//                errorMsg.append(error.getField())
+//                        .append(" - ").append(error.getDefaultMessage())
+//                        .append(";");
+//            }
+//
+//            throw new UserNotCreatedException(errorMsg.toString());
+//        }
+//        userService.update(convertToUser(userDTO));
+//
+//        // send HTTP answer with null body and status 200
+//        return ResponseEntity.ok(HttpStatus.OK);
+//    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
+        userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -80,6 +115,14 @@ public class AdminRestController {
         );
 
         return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+    }
+
+    private User convertToUser(UserDTO userDTO) {
+        return modelMapper.map(userDTO, User.class);
+    }
+
+    private UserDTO convertToDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 
 }
