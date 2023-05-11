@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
                 temp += "<td>" + elem.lastName + "</td>";
                 temp += "<td>" + elem.age + "</td>";
                 temp += "<td>" + elem.email + "</td>";
-                temp += "<td>" + elem.roles + "</td>";
+                temp += "<td>" + elem.roles+ "</td>";
                 temp += "<td><button type='button' data-toggle='modal' " +
                     "class='btn btn-primary btn-sm text-white btn-info' data-target='#editModal"+ elem.id+"'>Edit</button></td>";
                 temp += "<td><form class='delete_form' method='DELETE' action='/admin/users/{id}(id = " + elem.id+ ")'>" +
