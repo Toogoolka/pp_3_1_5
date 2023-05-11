@@ -38,10 +38,8 @@ public class AdminRestController {
 
 
     @GetMapping()
-    public List<UserDTO> getUsers() {
-        return userService.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<User> getUsers() {
+        return userService.findAll();
     }
 
     @GetMapping("/{id}")
@@ -70,27 +68,28 @@ public class AdminRestController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<HttpStatus> updateUser(@RequestBody @Valid UserDTO userDTO,
-//                                                 BindingResult bindingResult,
-//                                                 @PathVariable("id") Long id){
-//        if (bindingResult.hasErrors()) {
-//            StringBuilder errorMsg = new StringBuilder();
-//            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-//
-//            for (FieldError error : fieldErrors) {
-//                errorMsg.append(error.getField())
-//                        .append(" - ").append(error.getDefaultMessage())
-//                        .append(";");
-//            }
-//
-//            throw new UserNotCreatedException(errorMsg.toString());
-//        }
-//        userService.update(convertToUser(userDTO));
-//
-//        // send HTTP answer with null body and status 200
-//        return ResponseEntity.ok(HttpStatus.OK);
-//    }
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(@RequestBody @Valid User user,
+                                                 BindingResult bindingResult,
+                                                 @PathVariable("id") Long id){
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMsg = new StringBuilder();
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+
+            for (FieldError error : fieldErrors) {
+                errorMsg.append(error.getField())
+                        .append(" - ").append(error.getDefaultMessage())
+                        .append(";");
+            }
+
+            throw new UserNotCreatedException(errorMsg.toString());
+        }
+        userService.update(user);
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+
+        // send HTTP answer with null body and status 200
+        return ResponseEntity.ok(userDTO);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {

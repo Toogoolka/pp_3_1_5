@@ -44,7 +44,7 @@ public class User implements UserDetails {
     private LocalDateTime updatedAt;
 
     @Column(name = "created_who")
-    @NotEmpty(message = "Should not be empty")
+//    @NotEmpty(message = "Should not be empty")
     private String createdWho;
 
 

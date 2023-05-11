@@ -30,7 +30,7 @@ public class AdminController {
     @GetMapping()
     public String mainPage(Model model, Principal principal) {
         model.addAttribute("user", userService.findByUsername(principal.getName()));
-        return "index";
+        return "test";
     }
     @GetMapping("/data")
     public String show(Model model) {

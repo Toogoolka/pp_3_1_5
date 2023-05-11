@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
+import ru.kata.spring.boot_security.demo.util.UserNotCreatedException;
 import ru.kata.spring.boot_security.demo.util.UserNotFoundException;
 
 import java.time.LocalDateTime;
@@ -47,6 +48,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void update(User updatedUser) {
+        bCryptPasswordEncoder.encode(updatedUser.getPassword());
+        setUpdatedInfoToUser(updatedUser);
         userRepository.save(updatedUser);
     }
 
@@ -58,8 +61,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void setInfoToUser(User user) {
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        user.setCreatedAt(now);
+        user.setUpdatedAt(now);
         user.setCreatedWho("SYSTEM");
     }
     @Override

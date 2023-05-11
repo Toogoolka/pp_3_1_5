@@ -4,16 +4,18 @@ import javax.persistence.Column;
 import javax.validation.constraints.*;
 
 public class UserDTO {
-    @NotEmpty(message = "*Name should not be empty")
+    private Long id;
+
+    //    @NotEmpty(message = "*Name should not be empty")
     private String username;
-    @NotEmpty(message = "*Last name should not be empty")
+//    @NotEmpty(message = "*Last name should not be empty")
     private String lastName;
-    @Min(value = 0, message = "*Age is incorrect")
+//    @Min(value = 0, message = "*Age is incorrect")
     private int age;
-    @Email(message = "*Enter correctly email (example@examp.org)")
+//    @Email(message = "*Enter correctly email (example@examp.org)")
     private String email;
-    @Column(name = "password")
-    @Size(min = 3, message = "Password should be min 4 characters")
+//    @Column(name = "password")
+//    @Size(min = 3, message = "Password should be min 4 characters")
     private String password;
 
 
@@ -64,5 +66,13 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
