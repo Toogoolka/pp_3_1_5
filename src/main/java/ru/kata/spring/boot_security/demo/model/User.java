@@ -36,19 +36,6 @@ public class User implements UserDetails {
     @Column(name = "password")
     @Size(min = 3, message = "Password should be min 4 characters")
     private String password;
-
-    @Column(name = "created_at")
-//    @NotEmpty(message = "Date should not be empty")
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "created_who")
-//    @NotEmpty(message = "Should not be empty")
-    private String createdWho;
-
-
-
     @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -77,6 +64,15 @@ public class User implements UserDetails {
         this.username = username;
         this.age = age;
         this.email = email;
+    }
+
+    public User(String username, String lastName, int age, String email, String password, Set<Role> roles) {
+        this.username = username;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 
     public void setDefaultRole(Role role){
@@ -118,29 +114,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getCreatedWho() {
-        return createdWho;
-    }
-
-    public void setCreatedWho(String createdWho) {
-        this.createdWho = createdWho;
-    }
 
     public Set<Role> getRoles() {
         return roles;

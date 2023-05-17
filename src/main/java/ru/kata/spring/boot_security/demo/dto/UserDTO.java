@@ -1,22 +1,29 @@
 package ru.kata.spring.boot_security.demo.dto;
 
+import ru.kata.spring.boot_security.demo.model.Role;
+
 import javax.persistence.Column;
 import javax.validation.constraints.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class UserDTO {
     private Long id;
 
-    //    @NotEmpty(message = "*Name should not be empty")
+    @NotEmpty(message = "*Name should not be empty")
     private String username;
-//    @NotEmpty(message = "*Last name should not be empty")
+    @NotEmpty(message = "*Last name should not be empty")
     private String lastName;
-//    @Min(value = 0, message = "*Age is incorrect")
+    @Min(value = 0, message = "*Age is incorrect")
     private int age;
-//    @Email(message = "*Enter correctly email (example@examp.org)")
+    @Email(message = "*Enter correctly email (example@examp.org)")
     private String email;
-//    @Column(name = "password")
-//    @Size(min = 3, message = "Password should be min 4 characters")
+    @Column(name = "password")
+    @Size(min = 3, message = "Password should be min 4 characters")
     private String password;
+    private Set<Role> roles = new TreeSet();
+
 
 
     public UserDTO() {
@@ -27,6 +34,15 @@ public class UserDTO {
         this.lastName = lastName;
         this.age = age;
         this.email = email;
+    }
+
+    public UserDTO(String username, String lastName, int age, String email, String password, Set roles) {
+        this.username = username;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
     }
 
     public String getUsername() {
@@ -74,5 +90,13 @@ public class UserDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set roles) {
+        this.roles = roles;
     }
 }

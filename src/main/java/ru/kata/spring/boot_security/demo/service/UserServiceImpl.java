@@ -41,7 +41,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        setInfoToUser(user);
         userRepository.save(user);
     }
 
@@ -49,7 +48,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void update(User updatedUser) {
         bCryptPasswordEncoder.encode(updatedUser.getPassword());
-        setUpdatedInfoToUser(updatedUser);
         userRepository.save(updatedUser);
     }
 
@@ -59,17 +57,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.deleteById(id);
     }
 
-    @Override
-    public void setInfoToUser(User user) {
-        LocalDateTime now = LocalDateTime.now();
-        user.setCreatedAt(now);
-        user.setUpdatedAt(now);
-        user.setCreatedWho("SYSTEM");
-    }
-    @Override
-    public void setUpdatedInfoToUser(User user) {
-        user.setUpdatedAt(LocalDateTime.now());
-    }
 
     @Override
     public List<User> findAll() {
