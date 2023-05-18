@@ -18,6 +18,7 @@ import ru.kata.spring.boot_security.demo.util.UserValidator;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -33,13 +34,15 @@ public class AdminController {
 
 
     @GetMapping()
-    public List<User> getUsers() {
-        return userService.findAll();
+    public ResponseEntity <List<UserDTO>> getUsers() {
+        return ResponseEntity.ok(userService.findAll().stream()
+                .map(user -> modelMapper.map(user, UserDTO.class))
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public UserDTO getOneDTO(@PathVariable("id") Long id) {
-        return convertToDTO(userService.findOne(id));
+    public ResponseEntity <UserDTO> getOneDTO(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(convertToDTO(userService.findOne(id)));
     }
 
     @PostMapping
